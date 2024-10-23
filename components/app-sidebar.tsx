@@ -1,5 +1,4 @@
-import { Bell, Book, Calendar, Home, Inbox, Search, Section, Settings } from "lucide-react"
- 
+import { Bell, Book, Calendar, Inbox, Search, Settings, User2, UsersRound } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,17 +9,21 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarFooter
-  
-} from "@/components/ui/sidebar"
- 
+} from "@/components/ui/sidebar";
+
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { ModeToggle } from "./mode-toggle";
+import { IBM_Plex_Mono } from "next/font/google";
+
+const ibmMono700 = IBM_Plex_Mono({ subsets: ['latin'], weight: '700' });
 
 // Menu items.
 const items = [
@@ -37,7 +40,7 @@ const items = [
   {
     title: "people",
     url: "/users",
-    icon: Calendar,
+    icon: UsersRound,
   },
   {
     title: "search",
@@ -49,15 +52,15 @@ const items = [
     url: "/settings",
     icon: Settings,
   },
-]
- 
+];
+
 export function AppSidebar() {
   return (
-    <Sidebar className="dark text-neutral-50">
-      <SidebarContent>
+    <Sidebar variant="floating" collapsible="icon" className="">
+      <SidebarContent className="flex flex-col h-full"> {/* Flex column and full height */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xl font-mono">RecReads</SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupLabel className={`font-semibold text-xl mt-4 mb-6`}>RecReads</SidebarGroupLabel>
+          <SidebarGroupContent className="flex-grow"> {/* Allow this to grow */}
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
@@ -70,37 +73,45 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-            <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    <p>Username</p>
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width] dark"
-                >
-                  <DropdownMenuItem>
-                    <span>Account</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Billing</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Username and ModeToggle at the bottom */}
+        <SidebarFooter className="mt-auto"> {/* Ensure footer is at the bottom */}
+  <div className=""> {/* Flex container to align items side by side */}
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton>
+              <User2 /> Username
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            side="top"
+            className="w-[--radix-popper-anchor-width]"
+          >
+            <DropdownMenuItem>
+              <span>Account</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <span>Billing</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <span>Sign out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+    
+    {/* No gap applied directly, maintain alignment */}
+    <div className=""> {/* Add margin-left to create space only when necessary */}
+      <ModeToggle/>
+    </div>
+  </div>
+</SidebarFooter>
       </SidebarContent>
     </Sidebar>
-    
-  )
+  );
 }
