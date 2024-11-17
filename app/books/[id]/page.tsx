@@ -53,7 +53,7 @@ export default function BookIdPage({ params }: { params: { id: string } }) {
             >
                 Back to Books
             </Button>
-            <section className=' flex justify-center items-center border border-red-500'>
+            <section className=' flex justify-center items-center '>
                 <div>
             <div className='flex flex-row mt-4'>
             <h1 className="hover:shadow-lg transition-shadow duration-200 font-semibold text-3xl">{book.title}</h1> 
