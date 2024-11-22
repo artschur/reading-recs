@@ -12,6 +12,16 @@ body {
   }
 }
 
+::-moz-selection {
+  background: #49DE80;
+}
+::-webkit-selection {
+  background: #49DE80;
+}
+::selection {
+  background: #49DE80;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
