@@ -22,6 +22,7 @@ import {
 
 import { ModeToggle } from "./mode-toggle";
 import { IBM_Plex_Mono } from "next/font/google";
+import { UserButton } from "@clerk/nextjs";
 
 const ibmMono700 = IBM_Plex_Mono({ subsets: ['latin'], weight: '700' });
 
@@ -78,39 +79,19 @@ export function AppSidebar() {
 
         {/* Username and ModeToggle at the bottom */}
         <SidebarFooter className="mt-auto"> {/* Ensure footer is at the bottom */}
-  <div className=""> {/* Flex container to align items side by side */}
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton>
-              <User2 /> Username
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="top"
-            className="w-[--radix-popper-anchor-width]"
-          >
-            <DropdownMenuItem>
-              <span>Account</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <span>Billing</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <span>Sign out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
-    
-    {/* No gap applied directly, maintain alignment */}
-    <div className=""> {/* Add margin-left to create space only when necessary */}
-      <ModeToggle/>
-    </div>
-  </div>
-</SidebarFooter>
+          <div className=""> {/* Flex container to align items side by side */}
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <UserButton showName />
+              </SidebarMenuItem>
+            </SidebarMenu>
+
+            {/* No gap applied directly, maintain alignment */}
+            <div className=""> {/* Add margin-left to create space only when necessary */}
+              <ModeToggle />
+            </div>
+          </div>
+        </SidebarFooter>
       </SidebarContent>
     </Sidebar>
   );
