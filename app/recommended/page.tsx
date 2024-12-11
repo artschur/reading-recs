@@ -1,12 +1,5 @@
-'use client';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { IBM_Plex_Mono } from 'next/font/google';
-import { ArrowUpRight } from 'lucide-react';
-
-const ibmMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '700'] });
-const ibmMono700 = IBM_Plex_Mono({ subsets: ['latin'], weight: '700' });
+import MostRecommendedBooks from '@/components/mostRecommendedBooks';
+import { RecommendedInfluentialPeople } from '@/components/recommendedInfluentialPeople';
 
 interface Book {
   id: number;
@@ -18,58 +11,55 @@ interface Book {
   authorName: string;
 }
 
-export default function BooksPage() {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface InfluentialPerson {
+  id: number;
+  name: string;
+  description: string;
+  yearBorn: number;
+  influentialField_Id: number;
+  occupation: string;
+  profilePic: string;
+  visible: boolean;
+  recommendationsCount: number;
+}
 
-  useEffect(() => {
-    async function fetchBooks() {
-      try {
-        const response = await fetch('/api/books?sortBy=numberOfRecommendations&order=desc');
-        if (!response.ok) throw new Error('Failed to fetch books');
-        const data = await response.json();
-        setBooks(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
+async function fetchBooks(): Promise<Book[]> {
+  try {
+    const response = await fetch('http://localhost:3000/api/books?limit=6', {
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch books');
     }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    return [];
+  }
+}
 
-    fetchBooks();
-  }, []);
+async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
+  try {
+    const response = await fetch('http://localhost:3000/api/influential_people', {
+      next: { revalidate: 10 }, // Optional: Cache the response for 10 seconds
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch influential people');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching influential people:', error);
+    return [];
+  }
+}
 
-  if (loading) return <div className="p-4">Loading books...</div>;
-  if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
+export default async function BooksPage() {
+  const books = await fetchBooks();
+  const people = await fetchInfluentialPeople();
 
   return (
     <div>
-      <div className='p-4 ml-2 flex flex-row'>
-        <ArrowUpRight />
-        <h1 className={`${ibmMono700.className} text-xl ml-2 `}>Most recommended</h1>
-      </div>
-      <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {books.map((book) => (
-          <Card key={book.id}>
-            <Link href={`/books/${book.id}`} className='flex flex-col'>
-              <CardHeader>
-                <CardTitle>
-                  {book.title}
-                </CardTitle>
-                <p className='text-green-700'>{book.authorName}. {book.publishedYear} </p>
-              </CardHeader>
-              <CardContent>
-                <p>{book.description}</p>
-              </CardContent>
-              <CardFooter>
-                <p>Rating: {book.rating}/5</p>
-                <p>Recommendations: {book.numberOfRecommendations}</p>
-              </CardFooter>
-            </Link>
-          </Card>
-        ))}
-      </div>
+      <MostRecommendedBooks books={books} />
+      <RecommendedInfluentialPeople person={people} />
     </div>
   );
 }

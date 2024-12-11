@@ -29,8 +29,6 @@ export default function RecommendedLayout({
                     <div className="flex">
                         <AppSidebar /> {/* Sidebar component */}
                         <main className="flex-1">
-                            <SidebarTrigger />
-                            <ModeToggle /> {/* Theme toggle button */}
                             {children} {/* Render dashboard-specific content */}
                         </main>
                     </div>

@@ -1,4 +1,4 @@
-import { Bell, Book, Calendar, Inbox, Search, Settings, User2, UsersRound } from "lucide-react";
+import { Bell, Book, Search, Settings, UsersRound } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,25 +8,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { ModeToggle } from "./mode-toggle";
-import { IBM_Plex_Mono } from "next/font/google";
 import { UserButton } from "@clerk/nextjs";
 
-const ibmMono700 = IBM_Plex_Mono({ subsets: ['latin'], weight: '700' });
-
-// Menu items.
 const items = [
   {
     title: "recommended reads",
@@ -56,12 +43,19 @@ const items = [
 ];
 
 export function AppSidebar() {
+
   return (
-    <Sidebar variant="floating" collapsible="icon" className="">
-      <SidebarContent className="flex flex-col h-full"> {/* Flex column and full height */}
+    <Sidebar
+      variant="floating"
+      collapsible="icon"
+      className=""
+    >
+      <SidebarContent className="flex flex-col h-full">
         <SidebarGroup>
-          <SidebarGroupLabel className={`font-semibold text-xl mt-4 mb-6`}>RecReads</SidebarGroupLabel>
-          <SidebarGroupContent className="flex-grow"> {/* Allow this to grow */}
+          <SidebarGroupLabel className={`font-semibold text-xl mt-4 mb-6`}>
+            readingrecs
+          </SidebarGroupLabel>
+          <SidebarGroupContent className="flex-grow">
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
@@ -77,22 +71,11 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Username and ModeToggle at the bottom */}
-        <SidebarFooter className="mt-auto"> {/* Ensure footer is at the bottom */}
-          <div className=""> {/* Flex container to align items side by side */}
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <UserButton showName />
-              </SidebarMenuItem>
-            </SidebarMenu>
-
-            {/* No gap applied directly, maintain alignment */}
-            <div className=""> {/* Add margin-left to create space only when necessary */}
-              <ModeToggle />
-            </div>
-          </div>
+        <SidebarFooter className="mt-auto">
+          <ModeToggle />
+          <UserButton />
         </SidebarFooter>
-      </SidebarContent>
-    </Sidebar>
+      </SidebarContent >
+    </Sidebar >
   );
 }
