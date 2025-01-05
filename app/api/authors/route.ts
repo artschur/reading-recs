@@ -15,17 +15,17 @@ export async function GET(request: Request) {
 
 
     try {
-        // Build the query
+        type SortColumnKey = 'recommendations' | 'rating' | 'publishedYear' | 'title' | 'year';
+
         const sortColumns = {
             recommendations: sql`COUNT(${recommendationsTable.id})`,
             rating: booksTable.rating,
             publishedYear: booksTable.publishedYear,
             title: booksTable.title,
             year: booksTable.publishedYear,
-        };
+        } as const;
 
-        // Ensure the `sortBy` parameter maps to a valid column, otherwise default to numberOfRecommendations
-        const sortColumn = sortColumns[sort] || sql`COUNT(${recommendationsTable.id})`;
+        const sortColumn = sortColumns[sort as SortColumnKey] || sortColumns.recommendations;
 
         const query = db
             .select({
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
             .groupBy(booksTable.id, authorsTable.name);
 
         if (genre) {
-            query.where(eq(booksTable.genreId, genre));
+            query.where(eq(booksTable.genreId, parseInt(genre)));
         }
 
         if (limit) {

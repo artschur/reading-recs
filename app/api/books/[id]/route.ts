@@ -24,7 +24,7 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
             .innerJoin(authorsTable, eq(booksTable.authorId, authorsTable.id))
             .innerJoin(genresTable, eq(booksTable.genreId, genresTable.id))
             .leftJoin(recommendationsTable, eq(recommendationsTable.bookId, booksTable.id))
-            .where(eq(booksTable.id, params.id))
+            .where(eq(booksTable.id, parseInt(params.id)))
             .groupBy(booksTable.id, authorsTable.name, genresTable.name);
 
         // Check if the book was found

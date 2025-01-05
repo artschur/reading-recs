@@ -1,5 +1,5 @@
-import MostRecommendedBooks from '@/components/mostRecommendedBooks';
-import { RecommendedInfluentialPeople } from '@/components/recommendedInfluentialPeople';
+import MostRecommendedBooks from "@/components/mostRecommendedBooks";
+import { RecommendedInfluentialPeople } from "@/components/recommendedInfluentialPeople";
 
 interface Book {
   id: number;
@@ -9,6 +9,7 @@ interface Book {
   numberOfRecommendations: number;
   description: string;
   authorName: string;
+  genreName: string;
 }
 
 interface InfluentialPerson {
@@ -25,32 +26,36 @@ interface InfluentialPerson {
 
 async function fetchBooks(): Promise<Book[]> {
   try {
-    const response = await fetch('http://localhost:3000/api/books?limit=6', {
-    });
+    const response = await fetch("http://localhost:3000/api/books?limit=6", {});
     if (!response.ok) {
-      throw new Error('Failed to fetch books');
+      throw new Error("Failed to fetch books");
     }
     return response.json();
   } catch (error) {
-    console.error('Error fetching books:', error);
+    console.error("Error fetching books:", error);
     return [];
   }
 }
 
 async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
   try {
-    const response = await fetch('http://localhost:3000/api/influential_people', {
-      next: { revalidate: 10 }, // Optional: Cache the response for 10 seconds
-    });
+    const response = await fetch(
+      "http://localhost:3000/api/influential_people",
+      {
+        next: { revalidate: 10 }, // Optional: Cache the response for 10 seconds
+      },
+    );
     if (!response.ok) {
-      throw new Error('Failed to fetch influential people');
+      throw new Error("Failed to fetch influential people");
     }
     return response.json();
   } catch (error) {
-    console.error('Error fetching influential people:', error);
+    console.error("Error fetching influential people:", error);
     return [];
   }
 }
+
+//maybe send them together?
 
 export default async function BooksPage() {
   const books = await fetchBooks();
