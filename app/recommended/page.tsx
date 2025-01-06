@@ -1,5 +1,6 @@
 import MostRecommendedBooks from "@/components/mostRecommendedBooks";
 import { RecommendedInfluentialPeople } from "@/components/recommendedInfluentialPeople";
+import { InfluentialPerson } from "@/types";
 
 interface Book {
   id: number;
@@ -10,18 +11,6 @@ interface Book {
   description: string;
   authorName: string;
   genreName: string;
-}
-
-interface InfluentialPerson {
-  id: number;
-  name: string;
-  description: string;
-  yearBorn: number;
-  influentialField_Id: number;
-  occupation: string;
-  profilePic: string;
-  visible: boolean;
-  recommendationsCount: number;
 }
 
 async function fetchBooks(): Promise<Book[]> {
@@ -48,14 +37,13 @@ async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
     if (!response.ok) {
       throw new Error("Failed to fetch influential people");
     }
-    return response.json();
+    const data: InfluentialPerson[] = await response.json();
+    return data;
   } catch (error) {
     console.error("Error fetching influential people:", error);
     return [];
   }
 }
-
-//maybe send them together?
 
 export default async function BooksPage() {
   const books = await fetchBooks();
