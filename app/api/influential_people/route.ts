@@ -1,3 +1,4 @@
+import InfluentialPeople from "@/app/influential/[id]/page";
 import { db } from "@/db/index";
 import {
   fieldsTable,

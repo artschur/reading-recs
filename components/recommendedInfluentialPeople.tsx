@@ -9,18 +9,7 @@ import {
 } from "./ui/card";
 import Link from "next/link";
 import Image from "next/image"; // Importing the Next.js Image component
-
-interface InfluentialPerson {
-  id: number;
-  name: string;
-  description: string;
-  yearBorn: number;
-  influentialField_Id: number;
-  occupation: string;
-  profilePic: string;
-  visible: boolean;
-  recommendationsCount: number;
-}
+import { InfluentialPerson } from "@/types";
 
 interface InfluentialPeopleProps {
   person: InfluentialPerson[];

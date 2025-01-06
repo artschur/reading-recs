@@ -1,19 +1,19 @@
-import { InfluentialPerson } from "@/app/recommended/page";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { InfluentialPerson } from "@/types";
 
 interface PageProps {
-  params: {
-    id: number;
-  };
+  params: Promise<{
+    id: string;
+  }>;
 }
-
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   try {
-    const person = await getInfluentialPerson(params.id);
+    const { id } = await params; //extrai a chave do params ja
+    const person = await getInfluentialPerson(Number(id));
     return {
       title: `${person.name} | Influential People`,
       description: `Learn about ${person.name} and their book recommendations.`,
@@ -32,7 +32,7 @@ async function getInfluentialPerson(id: number): Promise<InfluentialPerson> {
     const response = await fetch(
       `http://localhost:3000/api/influential_people/${id}`,
       {
-        next: { revalidate: 3600 },
+        next: { revalidate: 0 },
       },
     );
 
@@ -48,10 +48,10 @@ async function getInfluentialPerson(id: number): Promise<InfluentialPerson> {
   }
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function InfluentialPeople({ params }: PageProps) {
   try {
-    const { id } = params;
-    const person = await getInfluentialPerson(id);
+    const { id } = await params;
+    const person = await getInfluentialPerson(Number(id));
 
     return (
       <div className="min-h-screen p-4 flex justify-center items-center bg-gradient-to-br from-gray-900 to-gray-800 text-white font-mono">

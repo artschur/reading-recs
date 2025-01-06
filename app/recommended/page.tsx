@@ -1,5 +1,6 @@
 import MostRecommendedBooks from "@/components/mostRecommendedBooks";
 import { RecommendedInfluentialPeople } from "@/components/recommendedInfluentialPeople";
+import { InfluentialPerson } from "@/types";
 
 interface Book {
   id: number;
@@ -10,18 +11,6 @@ interface Book {
   description: string;
   authorName: string;
   genreName: string;
-}
-
-export interface InfluentialPerson {
-  id: number;
-  name: string;
-  description: string;
-  yearBorn: number;
-  field: string;
-  occupation: string;
-  profilePic: string;
-  visible: boolean;
-  recommendationsCount: number;
 }
 
 async function fetchBooks(): Promise<Book[]> {
@@ -37,7 +26,7 @@ async function fetchBooks(): Promise<Book[]> {
   }
 }
 
-export async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
+async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
   try {
     const response = await fetch(
       "http://localhost:3000/api/influential_people",
