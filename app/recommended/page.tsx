@@ -12,12 +12,12 @@ interface Book {
   genreName: string;
 }
 
-interface InfluentialPerson {
+export interface InfluentialPerson {
   id: number;
   name: string;
   description: string;
   yearBorn: number;
-  influentialField_Id: number;
+  field: string;
   occupation: string;
   profilePic: string;
   visible: boolean;
@@ -37,7 +37,7 @@ async function fetchBooks(): Promise<Book[]> {
   }
 }
 
-async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
+export async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
   try {
     const response = await fetch(
       "http://localhost:3000/api/influential_people",
@@ -48,14 +48,13 @@ async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
     if (!response.ok) {
       throw new Error("Failed to fetch influential people");
     }
-    return response.json();
+    const data: InfluentialPerson[] = await response.json();
+    return data;
   } catch (error) {
     console.error("Error fetching influential people:", error);
     return [];
   }
 }
-
-//maybe send them together?
 
 export default async function BooksPage() {
   const books = await fetchBooks();
