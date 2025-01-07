@@ -1,4 +1,3 @@
-import InfluentialPeople from "@/app/influential/[id]/page";
 import { db } from "@/db/index";
 import {
   fieldsTable,
@@ -30,7 +29,7 @@ export async function GET(request: Request) {
       fieldsTable,
       eq(fieldsTable.id, influencialPeopleTable.influentialField_Id),
     )
-    .groupBy(influencialPeopleTable.id);
+    .groupBy(influencialPeopleTable.id, fieldsTable.name);
 
   const response = await query;
 

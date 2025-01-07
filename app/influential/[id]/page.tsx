@@ -29,7 +29,9 @@ export async function generateMetadata({
 
 async function getInfluentialPerson(id: number): Promise<InfluentialPerson> {
   try {
-    const response = await fetch(`/api/influential_people/${id}`, {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+    const response = await fetch(`${baseUrl}/api/influential_people/${id}`, {
       next: { revalidate: 0 },
     });
 

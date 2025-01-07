@@ -2,6 +2,8 @@ import MostRecommendedBooks from "@/components/mostRecommendedBooks";
 import { RecommendedInfluentialPeople } from "@/components/recommendedInfluentialPeople";
 import { InfluentialPerson } from "@/types";
 
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+
 interface Book {
   id: number;
   title: string;
@@ -15,7 +17,7 @@ interface Book {
 
 async function fetchBooks(): Promise<Book[]> {
   try {
-    const response = await fetch("/api/books?limit=6", {});
+    const response = await fetch(`${baseUrl}/api/books?limit=6`, {});
     if (!response.ok) {
       throw new Error("Failed to fetch books");
     }
@@ -28,8 +30,8 @@ async function fetchBooks(): Promise<Book[]> {
 
 async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
   try {
-    const response = await fetch("/api/influential_people", {
-      next: { revalidate: 500 }, // Optional: Cache the response for 10 seconds
+    const response = await fetch(`${baseUrl}/api/influential_people`, {
+      next: { revalidate: 100 }, // Optional: Cache the response for 10 seconds
     });
     if (!response.ok) {
       throw new Error("Failed to fetch influential people");
