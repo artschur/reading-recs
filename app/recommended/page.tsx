@@ -15,7 +15,7 @@ interface Book {
 
 async function fetchBooks(): Promise<Book[]> {
   try {
-    const response = await fetch("http://localhost:3000/api/books?limit=6", {});
+    const response = await fetch("/api/books?limit=6", {});
     if (!response.ok) {
       throw new Error("Failed to fetch books");
     }
@@ -28,12 +28,9 @@ async function fetchBooks(): Promise<Book[]> {
 
 async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
   try {
-    const response = await fetch(
-      "http://localhost:3000/api/influential_people",
-      {
-        next: { revalidate: 10 }, // Optional: Cache the response for 10 seconds
-      },
-    );
+    const response = await fetch("/api/influential_people", {
+      next: { revalidate: 500 }, // Optional: Cache the response for 10 seconds
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch influential people");
     }

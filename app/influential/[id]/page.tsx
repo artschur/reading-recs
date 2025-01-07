@@ -29,12 +29,9 @@ export async function generateMetadata({
 
 async function getInfluentialPerson(id: number): Promise<InfluentialPerson> {
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/influential_people/${id}`,
-      {
-        next: { revalidate: 0 },
-      },
-    );
+    const response = await fetch(`/api/influential_people/${id}`, {
+      next: { revalidate: 0 },
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch data");
