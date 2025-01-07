@@ -2,7 +2,7 @@ import MostRecommendedBooks from "@/components/mostRecommendedBooks";
 import { RecommendedInfluentialPeople } from "@/components/recommendedInfluentialPeople";
 import { InfluentialPerson } from "@/types";
 
-const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface Book {
   id: number;
@@ -47,7 +47,7 @@ async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
 export default async function BooksPage() {
   const books = await fetchBooks();
   const people = await fetchInfluentialPeople();
-
+  console.log(baseUrl);
   return (
     <div>
       <MostRecommendedBooks books={books} />
