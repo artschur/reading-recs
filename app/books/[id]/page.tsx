@@ -25,7 +25,9 @@ export default function BookIdPage(props: { params: Promise<{ id: string }> }) {
   useEffect(() => {
     async function fetchBook() {
       try {
-        const response = await fetch(`/api/books/${params.id}`);
+        const baseUrl =
+          process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+        const response = await fetch(`${baseUrl}/api/books/${params.id}`);
         if (!response.ok) throw new Error("Failed to fetch book");
         const data = await response.json();
         setBook(data);

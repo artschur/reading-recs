@@ -1,5 +1,4 @@
 import { db } from "@/db/index";
-
 import {
   influencialPeopleTable,
   recommendationsTable,
@@ -8,8 +7,11 @@ import {
 import { eq, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, props: any) {
-  const id = await props.params.id;
+export async function GET(
+  request: Request,
+  params: { params: { id: string } },
+) {
+  const { id } = await params.params;
 
   if (!id) {
     return new Response("Missing id parameter", { status: 400 });
