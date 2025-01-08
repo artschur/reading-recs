@@ -10,6 +10,29 @@ import {
 import { eq, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
+export async function getBook(id: number) {
+  return await db
+    .select({
+      id: booksTable.id,
+      title: booksTable.title,
+      publishedYear: booksTable.publishedYear,
+      rating: booksTable.rating,
+      description: booksTable.description,
+      numberOfRecommendations: sql`COUNT(DISTINCT ${recommendationsTable.id})`,
+      authorName: authorsTable.name,
+      genreName: genresTable.name,
+    })
+    .from(booksTable)
+    .innerJoin(authorsTable, eq(booksTable.authorId, authorsTable.id))
+    .innerJoin(genresTable, eq(booksTable.genreId, genresTable.id))
+    .leftJoin(
+      recommendationsTable,
+      eq(recommendationsTable.bookId, booksTable.id),
+    )
+    .where(eq(booksTable.id, id))
+    .groupBy(booksTable.id, authorsTable.name, genresTable.name);
+}
+
 export async function GET(
   request: Request,
   props: { params: Promise<{ id: number }> },

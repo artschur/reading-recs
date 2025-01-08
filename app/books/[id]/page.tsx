@@ -1,49 +1,11 @@
-"use client";
-import { useEffect, useState, use } from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-
-interface Book {
-  id: number;
-  title: string;
-  publishedYear: number;
-  rating: number;
-  description: string;
-  numberOfRecommendations: number;
-  authorId: string;
-  genreName: number;
-  authorName: string;
-}
+import { Book } from "@/types";
+import { getBook } from "@/app/api/books/[id]/route";
+import { use } from "react";
 
 export default function BookIdPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
-  const [book, setBook] = useState<Book | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    async function fetchBook() {
-      try {
-        const baseUrl =
-          process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
-        const response = await fetch(`${baseUrl}/api/books/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch book");
-        const data = await response.json();
-        setBook(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchBook();
-  }, [params.id]); // Run effect when book ID changes
-
-  if (loading) return <div className="p-4">Loading book details...</div>;
-  if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
-  if (!book) return <div className="p-4">Book not found</div>;
+  const book = use(getBook(Number(params.id)));
 
   return (
     <div className="p-4 w-full">

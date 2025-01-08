@@ -1,19 +1,12 @@
 import MostRecommendedBooks from "@/components/mostRecommendedBooks";
 import { RecommendedInfluentialPeople } from "@/components/recommendedInfluentialPeople";
 import { InfluentialPerson } from "@/types";
+import { getBooks } from "../api/books/route";
+import { Book } from "@/types";
+import { Suspense } from "react";
+import { getInfluentialPeople } from "../api/influential_people/route";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-interface Book {
-  id: number;
-  title: string;
-  publishedYear: number;
-  rating: number;
-  numberOfRecommendations: number;
-  description: string;
-  authorName: string;
-  genreName: string;
-}
 
 async function fetchBooks(): Promise<Book[]> {
   try {
@@ -45,13 +38,17 @@ async function fetchInfluentialPeople(): Promise<InfluentialPerson[]> {
 }
 
 export default async function BooksPage() {
-  const books = await fetchBooks();
-  const people = await fetchInfluentialPeople();
-  console.log(baseUrl);
+  const books = await getBooks(6);
+  const people = await getInfluentialPeople(1);
+
   return (
-    <div>
-      <MostRecommendedBooks books={books} />
-      <RecommendedInfluentialPeople person={people} />
-    </div>
+    <>
+      <Suspense fallback={<div>Loading...</div>}>
+        <MostRecommendedBooks books={books} />
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RecommendedInfluentialPeople person={people} />
+      </Suspense>
+    </>
   );
 }

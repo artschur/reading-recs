@@ -9,3 +9,14 @@ export interface InfluentialPerson {
   visible: boolean;
   recommendationsCount: number;
 }
+
+export interface Book {
+  id: number;
+  title: string;
+  publishedYear: number;
+  rating: number;
+  numberOfRecommendations: string;
+  description: string;
+  authorName: string;
+  genreName: string;
+}
