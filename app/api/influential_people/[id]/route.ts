@@ -7,12 +7,13 @@ import {
 import { eq, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, props: any) {
-  const id = await props.params.id;
+export async function GET(request: Request, params: any) {
+  const { id } = await params.id;
 
   if (!id) {
     return new Response("Missing id parameter", { status: 400 });
   }
+
   try {
     const influential = await db
       .select({
@@ -37,7 +38,7 @@ export async function GET(request: Request, props: any) {
       .where(eq(influencialPeopleTable.id, Number(id)))
       .groupBy(influencialPeopleTable.id, fieldsTable.name);
 
-    return NextResponse.json(await influential);
+    return NextResponse.json(influential);
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }

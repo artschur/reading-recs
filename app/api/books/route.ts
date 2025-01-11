@@ -1,42 +1,9 @@
 // app/api/books/route.ts
 import { db } from "@/db/index";
-import {
-  authorsTable,
-  booksTable,
-  recommendationsTable,
-  genresTable,
-} from "@/db/schema";
+import { authorsTable, booksTable, recommendationsTable } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { desc, asc } from "drizzle-orm";
-import { resolve } from "path/win32";
-import { Book } from "@/types";
-
-export async function getBooks(limit: number): Promise<Book[]> {
-  const response = db
-    .select({
-      id: booksTable.id,
-      title: booksTable.title,
-      publishedYear: booksTable.publishedYear,
-      rating: booksTable.rating,
-      description: booksTable.description,
-      numberOfRecommendations: sql`COUNT(${recommendationsTable.id})`,
-      authorId: booksTable.authorId,
-      genreName: genresTable.name,
-      authorName: authorsTable.name,
-    })
-    .from(booksTable)
-    .innerJoin(authorsTable, eq(authorsTable.id, booksTable.authorId))
-    .leftJoin(
-      recommendationsTable,
-      eq(recommendationsTable.bookId, booksTable.id),
-    )
-    .innerJoin(genresTable, eq(genresTable.id, booksTable.genreId))
-    .groupBy(booksTable.id, authorsTable.name, genresTable.name)
-    .limit(limit);
-
-  return response;
-}
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
