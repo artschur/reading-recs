@@ -1,17 +1,16 @@
 // app/api/books/route.ts
-import { db } from '@/db/index';
-import { authorsTable, booksTable, recommendationsTable } from '@/db/schema';
-import { eq, sql } from 'drizzle-orm';
-import { NextResponse } from 'next/server';
-import { desc, asc } from 'drizzle-orm';
+import { db } from "@/db/index";
+import { authorsTable, booksTable, recommendationsTable } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
+import { NextResponse } from "next/server";
+import { desc, asc } from "drizzle-orm";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const sort = url.searchParams.get('sortBy') || 'recommendations';  // Example: 'rating' or 'numberOfRecommendations'
-  const order = url.searchParams.get('order') || 'desc';  // Example: 'asc' or 'desc'
-  const limit = url.searchParams.get('limit') || '10';  // Example: '10' or '20'
-  const genre = url.searchParams.get('genre');  // Example: 'Fantasy' or 'Science Fiction'
-
+  const sort = url.searchParams.get("sortBy") || "recommendations"; // Example: 'rating' or 'numberOfRecommendations'
+  const order = url.searchParams.get("order") || "desc"; // Example: 'asc' or 'desc'
+  const limit = url.searchParams.get("limit") || "10"; // Example: '10' or '20'
+  const genre = url.searchParams.get("genre"); // Example: 'Fantasy' or 'Science Fiction'
 
   try {
     const sortColumns = {
@@ -24,7 +23,8 @@ export async function GET(request: Request) {
 
     type SortColumn = keyof typeof sortColumns;
 
-    const sortColumn = sortColumns[sort as SortColumn] || sql`COUNT(${recommendationsTable.id})`;
+    const sortColumn =
+      sortColumns[sort as SortColumn] || sql`COUNT(${recommendationsTable.id})`;
 
     const query = db
       .select({
@@ -40,8 +40,11 @@ export async function GET(request: Request) {
       })
       .from(booksTable)
       .innerJoin(authorsTable, eq(authorsTable.id, booksTable.authorId))
-      .leftJoin(recommendationsTable, eq(recommendationsTable.bookId, booksTable.id))
-      .orderBy(order === 'asc' ? asc(sortColumn) : desc(sortColumn))
+      .leftJoin(
+        recommendationsTable,
+        eq(recommendationsTable.bookId, booksTable.id),
+      )
+      .orderBy(order === "asc" ? asc(sortColumn) : desc(sortColumn))
       .groupBy(booksTable.id, authorsTable.name);
 
     if (genre) {
@@ -55,30 +58,44 @@ export async function GET(request: Request) {
     const booksWithAuthors = await query;
 
     return NextResponse.json(booksWithAuthors);
-
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ error: 'Failed to fetch books with authors' }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch books with authors" },
+      { status: 500 },
+    );
   }
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, publishedYear, genreId, rating, numberOfRecommendations, authorId } = body;
-
-    const newBook = await db.insert(booksTable).values({
+    const {
       title,
       publishedYear,
       genreId,
       rating,
       numberOfRecommendations,
-      authorId
-    }).returning();
+      authorId,
+    } = body;
+
+    const newBook = await db
+      .insert(booksTable)
+      .values({
+        title,
+        publishedYear,
+        genreId,
+        rating,
+        numberOfRecommendations,
+        authorId,
+      })
+      .returning();
 
     return NextResponse.json(newBook[0]);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create book' }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create book" },
+      { status: 500 },
+    );
   }
 }
-

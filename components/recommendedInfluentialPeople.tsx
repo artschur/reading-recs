@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import Image from "next/image"; // Importing the Next.js Image component
 import { InfluentialPerson } from "@/types";
+import { Book } from "@/types";
 
 interface InfluentialPeopleProps {
   person: InfluentialPerson[];
@@ -35,7 +36,7 @@ export function RecommendedInfluentialPeople({
               <CardHeader>
                 <div className="mb-4">
                   <Image
-                    src={p.profilePic}
+                    src={p.profilePic || "/default-profile-pic.jpg"}
                     alt={`Profile picture of ${p.name}`}
                     className="rounded-lg object-cover max-w-36 max-h-36"
                     width={140} // Set a fixed width for the image

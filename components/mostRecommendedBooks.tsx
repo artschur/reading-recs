@@ -9,20 +9,9 @@ import {
 } from "@/components/ui/card";
 import { ArrowUpRight } from "lucide-react";
 import { IBM_Plex_Mono } from "next/font/google";
-
+import { Book } from "@/types";
 // Initialize the font
 const ibmPlexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: "400" });
-
-interface Book {
-  id: number;
-  title: string;
-  publishedYear: number;
-  rating: number;
-  description: string;
-  numberOfRecommendations: number;
-  authorName: string;
-  genreName: string;
-}
 
 interface MostRecommendedBooksProps {
   books: Book[];
