@@ -3,15 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Book } from "@/types";
+import GoBackButton from "./ui/goBackButton";
 
 export default function BookDetails({ book }: { book: Book }) {
   const router = useRouter();
 
   return (
-    <div className="p-4 w-full">
-      <Button variant="outline" className="mb-4" onClick={() => router.back()}>
-        Back to Books
-      </Button>
+    <div className="p-4 w-3/4">
+      <GoBackButton text="Go Back" />
       <section className="flex justify-center items-center">
         <div>
           <div className="flex flex-row mt-4">
