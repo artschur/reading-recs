@@ -12,16 +12,17 @@ export default function ListOfBooks() {
   const [search, setSearch] = useState("");
 
   const books = listBooks(page, limit, sort, search);
-  return (
-    <>
-      <div>
-        {books.map((book: Book) => (
-          <Link href={`/books/${book.id}`} key={book.id}>
-            <h3>{book.title}</h3>
-            <p>{book.description}</p>
-          </Link>
-        ))}
-      </div>
-    </>
-  );
+  //   return (
+  //     <>
+  //       <div>
+  //         {books.map((book: Book) => (
+  //           <Link href={`/books/${book.id}`} key={book.id}>
+  //             <h3>{book.title}</h3>
+  //             <p>{book.description}</p>
+  //           </Link>
+  //         ))}
+  //       </div>
+  //     </>
+  //   );
+  // }
 }
