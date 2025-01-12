@@ -18,8 +18,8 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Reccommended Reacs",
-  description: "A place to find book recommendations from famous people.",
+  title: "Reading Recommendations",
+  description: "Find book recommendations from famous people.",
 };
 
 export default function RootLayout({
