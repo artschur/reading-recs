@@ -20,3 +20,5 @@ export interface Book {
   authorName: string;
   genreName: string;
 }
+
+export interface PartialBooks extends Omit<Book, "genreName"> {}
