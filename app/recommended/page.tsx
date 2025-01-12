@@ -14,7 +14,7 @@ export default async function BooksPage() {
   return (
     <>
       <MostRecommendedBooks books={newBooks} />
-      <RecommendedInfluentialPeople person={people} />
+      <RecommendedInfluentialPeople people={people} />
     </>
   );
 }

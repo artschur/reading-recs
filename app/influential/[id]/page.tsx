@@ -36,16 +36,29 @@ export async function generateMetadata({
   }
 }
 
+export default async function InfluentialPeople({ params }: PageProps) {
+  const { id } = await params;
+  const person = getPersonData(Number(id));
+
+  return (
+    <div className="min-h-screen">
+      <Suspense fallback={<LoadingSkeleton />}>
+        <PersonContent id={Number(id)} />
+      </Suspense>
+    </div>
+  );
+}
+
 function LoadingSkeleton() {
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
       <div className="animate-pulse space-y-8">
-        <div className="h-32 w-32 bg-black rounded-full mx-auto"></div>
-        <div className="h-8 bg-zinc-800 rounded w-48 mx-auto"></div>
+        <div className="h-32 w-32 rounded-full mx-auto bg-gray-200 dark:bg-zinc-800"></div>
+        <div className="h-8 rounded w-48 mx-auto bg-gray-200 dark:bg-zinc-800"></div>
         <div className="space-y-6 max-w-2xl mx-auto">
-          <div className="h-4 bg-zinc-800 rounded"></div>
-          <div className="h-4 bg-zinc-800 rounded w-5/6"></div>
-          <div className="h-4 bg-zinc-800 rounded w-4/6"></div>
+          <div className="h-4 bg-gray-200 dark:bg-zinc-800 rounded"></div>
+          <div className="h-4 bg-gray-200 dark:bg-zinc-800 rounded w-5/6"></div>
+          <div className="h-4 bg-gray-200 dark:bg-zinc-800 rounded w-4/6"></div>
         </div>
       </div>
     </div>
@@ -55,9 +68,11 @@ function LoadingSkeleton() {
 async function PersonContent({ id }: { id: number }) {
   const person = await getPersonData(id);
   return (
-    <div className="p-4 flex w-screen h-screen bg-black justify-center items-center text-white font-mono">
-      <div className="w-full p-4 max-w-4xl bg-black rounded-lg shadow-2xl overflow-hidden">
-        <GoBackButton text="Back to recommended" />
+    <div className="p-4 flex min-w-screen min-h-screen justify-center items-center font-mono">
+      <div className="max-w-4xl rounded-lg bg-white dark:bg-zinc-950">
+        <div className="go-back-container fixed bottom-8 right-4 md:static md:mb-8 md:ml-12 md:pt-12">
+          <GoBackButton text="Go Back" />
+        </div>
         <div className="p-8 md:p-12 flex flex-col md:flex-row gap-8">
           <div className="flex flex-col items-center md:items-start">
             <div className="relative w-40 h-40 mb-6 transform transition-all duration-300 hover:scale-105 hover:rotate-3">
@@ -67,48 +82,45 @@ async function PersonContent({ id }: { id: number }) {
                   layout="fill"
                   objectFit="cover"
                   alt={person.name}
-                  className="rounded-full border-4 border-zinc-600"
+                  className="rounded-full border-4 border-gray-200 dark:border-zinc-500"
                 />
               )}
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2 text-center md:text-left">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 text-center md:text-left text-gray-900 dark:text-white">
               {person.name}
             </h1>
-            <p className="text-xl text-zinc-400 mb-4">{person.occupation}</p>
+            <p className="text-xl text-gray-500 dark:text-zinc-400 mb-4">
+              {person.occupation}
+            </p>
           </div>
           <div className="flex-1 space-y-6">
-            <div className="p-6 ">
-              <h2 className="text-xl text-zinc-600 font-semibold mb-2">
+            <div className="p-6">
+              <h2 className="text-xl text-gray-500 dark:text-zinc-500 font-semibold mb-2">
                 About
               </h2>
-              <p className="leading-relaxed">{person.description}</p>
+              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+                {person.description}
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-lg">
-                <p className="text-zinc-600 mb-1">Field</p>
-                <p className="text-lg">{person.field}</p>
+                <p className="text-gray-500 dark:text-zinc-500 mb-1">Field</p>
+                <p className="text-lg text-gray-900 dark:text-white">
+                  {person.field}
+                </p>
               </div>
               <div className="p-4 rounded-lg">
-                <p className="text-zinc-600 mb-1">Recommendations</p>
-                <p className="text-lg">{person.recommendationsCount}</p>
+                <p className="text-gray-500 dark:text-zinc-500 mb-1">
+                  Recommendations
+                </p>
+                <p className="text-lg text-gray-900 dark:text-white">
+                  {person.recommendationsCount}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-export default async function InfluentialPeople({ params }: PageProps) {
-  const { id } = await params;
-  const person = getPersonData(Number(id));
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-zinc-800">
-      <Suspense fallback={<LoadingSkeleton />}>
-        <PersonContent id={Number(id)} />
-      </Suspense>
     </div>
   );
 }
