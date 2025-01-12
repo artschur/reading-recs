@@ -1,4 +1,11 @@
-import { Bell, Book, Search, Settings, UsersRound } from "lucide-react";
+import {
+  ArrowUpRight,
+  Bell,
+  Book,
+  Search,
+  Settings,
+  UsersRound,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +25,11 @@ const items = [
   {
     title: "recommended reads",
     url: "/recommended",
+    icon: ArrowUpRight,
+  },
+  {
+    title: "books",
+    url: "/books",
     icon: Book,
   },
   {
@@ -43,13 +55,8 @@ const items = [
 ];
 
 export function AppSidebar() {
-
   return (
-    <Sidebar
-      variant="floating"
-      collapsible="icon"
-      className=""
-    >
+    <Sidebar variant="floating" collapsible="icon" className="">
       <SidebarContent className="flex flex-col h-full">
         <SidebarGroup>
           <SidebarGroupLabel className={`font-semibold text-xl mt-4 mb-6`}>
@@ -75,7 +82,7 @@ export function AppSidebar() {
           <ModeToggle />
           <UserButton />
         </SidebarFooter>
-      </SidebarContent >
-    </Sidebar >
+      </SidebarContent>
+    </Sidebar>
   );
 }

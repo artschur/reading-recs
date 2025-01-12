@@ -7,8 +7,8 @@ import {
   influencialPeopleTable,
   fieldsTable,
 } from "@/db/schema";
-import { Book, InfluentialPerson } from "@/types";
-import { sql } from "drizzle-orm";
+import { Book, InfluentialPerson, PartialBooks } from "@/types";
+import { desc, sql } from "drizzle-orm";
 import { eq } from "drizzle-orm";
 
 export async function getBook(id: number): Promise<Book> {
@@ -120,4 +120,46 @@ export async function getInfluentialPerson(id: number) {
     .groupBy(influencialPeopleTable.id, fieldsTable.name);
 
   return response[0];
+}
+
+export async function listBooks(
+  page: number,
+  limit: number,
+  sort: string,
+  search: string,
+): Promise<PartialBooks[]> {
+  let query = db
+    .select({
+      id: booksTable.id,
+      title: booksTable.title,
+      rating: booksTable.rating,
+      description: booksTable.description,
+      numberOfRecommendations: sql`COUNT(${recommendationsTable.id})::integer`,
+      authorName: authorsTable.name,
+      publishedYear: booksTable.publishedYear,
+    })
+    .from(booksTable)
+    .innerJoin(authorsTable, eq(authorsTable.id, booksTable.authorId))
+    .leftJoin(
+      recommendationsTable,
+      eq(recommendationsTable.bookId, booksTable.id),
+    )
+    .groupBy(booksTable.id, authorsTable.name) // Add groupBy clause
+    .offset(page * limit)
+    .limit(limit);
+
+  if (search) {
+    query.where(
+      sql`LOWER(${booksTable.title}) LIKE LOWER(${"%" + search + "%"})`,
+    );
+  }
+
+  const results = await query;
+
+  // Convert the results to match PartialBooks type
+  return results.map((book) => ({
+    ...book,
+    rating: Number(book.rating),
+    numberOfRecommendations: Number(book.numberOfRecommendations),
+  }));
 }
