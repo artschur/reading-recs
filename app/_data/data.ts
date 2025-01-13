@@ -125,26 +125,28 @@ export async function getInfluentialPerson(id: number) {
 export async function listBooks(
   page: number,
   limit: number,
-  sort: string,
-  search: string,
-): Promise<PartialBooks[]> {
+  sort?: string,
+  search?: string,
+): Promise<Book[]> {
   let query = db
     .select({
       id: booksTable.id,
       title: booksTable.title,
       rating: booksTable.rating,
       description: booksTable.description,
+      genreName: genresTable.name,
       numberOfRecommendations: sql`COUNT(${recommendationsTable.id})::integer`,
       authorName: authorsTable.name,
       publishedYear: booksTable.publishedYear,
     })
     .from(booksTable)
     .innerJoin(authorsTable, eq(authorsTable.id, booksTable.authorId))
+    .innerJoin(genresTable, eq(genresTable.id, booksTable.genreId))
     .leftJoin(
       recommendationsTable,
       eq(recommendationsTable.bookId, booksTable.id),
     )
-    .groupBy(booksTable.id, authorsTable.name) // Add groupBy clause
+    .groupBy(booksTable.id, authorsTable.name, genresTable.id) // Add groupBy clause
     .offset(page * limit)
     .limit(limit);
 
@@ -156,7 +158,6 @@ export async function listBooks(
 
   const results = await query;
 
-  // Convert the results to match PartialBooks type
   return results.map((book) => ({
     ...book,
     rating: Number(book.rating),
