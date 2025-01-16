@@ -17,14 +17,9 @@ export default function RecommendedLayout({
         enableSystem
         disableTransitionOnChange
       >
-        <SidebarProvider>
-          <div className="flex">
-            <AppSidebar /> {/* Sidebar component */}
-            <main className="flex-1">
-              {children} {/* Render dashboard-specific content */}
-            </main>
-          </div>
-        </SidebarProvider>
+        <main className="flex-1">
+          {children} {/* Render dashboard-specific content */}
+        </main>
       </ThemeProvider>
     </SignedIn>
   );

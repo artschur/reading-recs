@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { getInfluentialPerson } from "@/app/_data/data";
+import { getInfluentialPerson, listRecommendedBooks } from "@/app/_data/data";
 import { cache } from "react";
 import GoBackButton from "@/components/ui/goBackButton";
-import { StepBack } from "lucide-react";
+import { Book } from "@/types";
+import Link from "next/link";
 
 interface PageProps {
   params: Promise<{
@@ -15,6 +16,10 @@ interface PageProps {
 // this is wont be duplicated
 const getPersonData = cache(async (id: number) => {
   return await getInfluentialPerson(id);
+});
+
+const getPersonBooks = cache(async (id: number): Promise<Book[]> => {
+  return await listRecommendedBooks(id);
 });
 
 export async function generateMetadata({
@@ -38,12 +43,15 @@ export async function generateMetadata({
 
 export default async function InfluentialPeople({ params }: PageProps) {
   const { id } = await params;
-  const person = getPersonData(Number(id));
+  const recommendedBooks = await getPersonBooks(Number(id));
 
   return (
     <div className="min-h-screen">
       <Suspense fallback={<LoadingSkeleton />}>
         <PersonContent id={Number(id)} />
+      </Suspense>
+      <Suspense>
+        <RecommendedBooks books={recommendedBooks} />
       </Suspense>
     </div>
   );
@@ -121,6 +129,26 @@ async function PersonContent({ id }: { id: number }) {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function RecommendedBooks({ books }: { books: Book[] }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto min-w-full p-8 ">
+      {books.map((book: Book) => (
+        <Link href={`/books/${book.id}`} replace={true} key={book.id}>
+          <div className="bg-white dark:bg-zinc-950 rounded-lg p-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {book.title}
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-zinc-500">
+              {book.authorName}
+            </p>
+            <p>{book.rating}</p>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 }

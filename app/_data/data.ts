@@ -164,3 +164,36 @@ export async function listBooks(
     numberOfRecommendations: Number(book.numberOfRecommendations),
   }));
 }
+
+export async function listRecommendedBooks(
+  influentialId: number,
+): Promise<Book[]> {
+  const query = await db
+    .select({
+      id: booksTable.id,
+      title: booksTable.title,
+      rating: booksTable.rating,
+      description: booksTable.description,
+      genreName: genresTable.name,
+      numberOfRecommendations: sql`COUNT(${recommendationsTable.id})::integer`,
+      authorName: authorsTable.name,
+      publishedYear: booksTable.publishedYear,
+    })
+    .from(booksTable)
+    .innerJoin(authorsTable, eq(authorsTable.id, booksTable.authorId))
+    .innerJoin(genresTable, eq(genresTable.id, booksTable.genreId))
+    .leftJoin(
+      recommendationsTable,
+      eq(recommendationsTable.bookId, booksTable.id),
+    )
+    .where(eq(recommendationsTable.influencerId, influentialId))
+    .groupBy(booksTable.id, authorsTable.name, genresTable.id);
+
+  const results = query;
+
+  return results.map((book) => ({
+    ...book,
+    rating: Number(book.rating),
+    numberOfRecommendations: Number(book.numberOfRecommendations),
+  }));
+}
