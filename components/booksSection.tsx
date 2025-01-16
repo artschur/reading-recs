@@ -42,15 +42,15 @@ export default function BooksSection({ books }: { books: Book[] }) {
 
   return (
     <div>
-      <div className="flex flex-col justify-between items-center md:flex-row mb-4">
+      <div className="flex flex-col justify-start gap-4 items-center md:flex-row mb-4">
         <input
           type="text"
           placeholder="Search for a book"
           onChange={handleSearch}
-          className="border border-gray-300 rounded-lg p-2"
+          className="border border-gray-300 rounded-lg p-2 h-10"
         />
-        <Select onValueChange={handleGenreSelect} defaultValue={genreFilter}>
-          <SelectTrigger className="w-[180px] max-w-[300px]">
+        <Select onValueChange={handleGenreSelect} defaultValue="all">
+          <SelectTrigger className="w-[180px] max-w-[300px] h-10">
             <SelectValue>{genreFilter || "Filter by genre"}</SelectValue>
           </SelectTrigger>
           <SelectContent>
